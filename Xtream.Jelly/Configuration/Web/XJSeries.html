@@ -1,0 +1,38 @@
+<div id="XJSeriesPage" data-role="page" class="page type-interior pluginConfigurationPage withTabs"
+  data-require="emby-input,emby-button" data-controller="__plugin/XJSeries.js">
+  <div data-role="content">
+    <div class="content-primary xj-page">
+      <form id="XJSeriesForm">
+        <div class="xj-section">
+          <h2 class="xj-section-title">Series</h2>
+          <div class="checkboxContainer checkboxContainer-withDescription">
+            <label>
+              <input is="emby-checkbox" id="Visible" name="Visible" type="checkbox" />
+              <span>Show this channel to users</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="xj-section">
+          <h2 class="xj-section-title">Series Category Selection</h2>
+          <div id="SeriesSearchContainer"></div>
+          <table class="xj-categories-table">
+            <thead>
+              <tr>
+                <th style="width:40px"></th>
+                <th>Category</th>
+                <th style="width:60px">Expand</th>
+              </tr>
+            </thead>
+            <tbody id="SeriesContent"></tbody>
+          </table>
+          <div id="SeriesPagination"></div>
+        </div>
+
+        <div style="margin-top:20px">
+          <button type="submit" class="xj-btn xj-btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

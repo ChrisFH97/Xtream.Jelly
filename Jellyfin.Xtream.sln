@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin.Xtream", "Jellyfin.Xtream\Jellyfin.Xtream.csproj", "{B5EB3EDF-6FB3-4FF2-879A-22687F90EA87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xtream.Jelly", "Xtream.Jelly\Xtream.Jelly.csproj", "{A1B2C3D4-5678-90AB-CDEF-123456789ABC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,5 +11,9 @@ Global
 		{B5EB3EDF-6FB3-4FF2-879A-22687F90EA87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5EB3EDF-6FB3-4FF2-879A-22687F90EA87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5EB3EDF-6FB3-4FF2-879A-22687F90EA87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B2C3D4-5678-90AB-CDEF-123456789ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-5678-90AB-CDEF-123456789ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-5678-90AB-CDEF-123456789ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-5678-90AB-CDEF-123456789ABC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -13,3 +13,20 @@ artifacts:
   - "Jellyfin.Xtream.dll"
 changelog: >
   changelog
+
+---
+name: "Xtream Jelly"
+guid: "a1b2c3d4-5678-90ab-cdef-123456789abc"
+version: "1.0.0.0"
+targetAbi: "10.11.0.0"
+framework: "net9.0"
+overview: "TV-optimized Xtream IPTV plugin with pagination and caching."
+description: >
+  Stream Live IPTV, Video On-Demand, and Series from an Xtream-compatible server.
+  Optimized for slower connections and TV usage with pagination, caching, and large UI targets.
+category: "LiveTV"
+owner: "chris"
+artifacts:
+  - "Xtream.Jelly.dll"
+changelog: >
+  Initial release with TV-optimized UI, server-side pagination, and response caching.

@@ -1,0 +1,405 @@
+/* ===== Xtream Jelly – TV-Optimized Styles =====
+   Designed for slow connections and 10-foot TV UIs:
+   - Large touch/focus targets (min 48px)
+   - High-contrast text
+   - Clear pagination controls
+   - Card-based layouts for D-pad navigation
+   - Minimal repaints for smooth scrolling
+*/
+
+:root {
+  --xj-accent: #00a4dc;
+  --xj-accent-hover: #0091c8;
+  --xj-bg: #1a1a2e;
+  --xj-card-bg: #16213e;
+  --xj-card-hover: #1a2744;
+  --xj-text: #e4e4e4;
+  --xj-text-muted: #9a9ab0;
+  --xj-border: #2a2a4a;
+  --xj-focus-ring: #00a4dc;
+  --xj-danger: #e74c3c;
+  --xj-success: #2ecc71;
+  --xj-radius: 8px;
+  --xj-gap: 12px;
+}
+
+/* ====== Base Layout ====== */
+.xj-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.xj-section {
+  margin-bottom: 24px;
+}
+
+.xj-section-title {
+  font-size: 1.4em;
+  font-weight: 600;
+  color: var(--xj-text);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--xj-accent);
+}
+
+/* ====== Form Controls ====== */
+.xj-form-group {
+  margin-bottom: 16px;
+}
+
+.xj-form-group label {
+  display: block;
+  font-size: 1em;
+  font-weight: 500;
+  color: var(--xj-text);
+  margin-bottom: 6px;
+}
+
+.xj-form-group .xj-hint {
+  font-size: 0.85em;
+  color: var(--xj-text-muted);
+  margin-top: 4px;
+}
+
+.xj-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 1.1em;
+  border: 2px solid var(--xj-border);
+  border-radius: var(--xj-radius);
+  background: var(--xj-card-bg);
+  color: var(--xj-text);
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.xj-input:focus {
+  outline: none;
+  border-color: var(--xj-focus-ring);
+  box-shadow: 0 0 0 3px rgba(0, 164, 220, 0.3);
+}
+
+/* ====== Buttons ====== */
+.xj-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  min-width: 48px;
+  padding: 10px 24px;
+  font-size: 1em;
+  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: var(--xj-radius);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  user-select: none;
+}
+
+.xj-btn:focus-visible {
+  outline: 3px solid var(--xj-focus-ring);
+  outline-offset: 2px;
+}
+
+.xj-btn:active {
+  transform: scale(0.97);
+}
+
+.xj-btn-primary {
+  background: var(--xj-accent);
+  color: #fff;
+}
+
+.xj-btn-primary:hover,
+.xj-btn-primary:focus {
+  background: var(--xj-accent-hover);
+}
+
+.xj-btn-secondary {
+  background: transparent;
+  color: var(--xj-text);
+  border-color: var(--xj-border);
+}
+
+.xj-btn-secondary:hover,
+.xj-btn-secondary:focus {
+  background: var(--xj-card-bg);
+  border-color: var(--xj-accent);
+}
+
+.xj-btn-small {
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 0.9em;
+}
+
+/* ====== Status Table ====== */
+.xj-status-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.xj-status-table td {
+  padding: 10px 14px;
+  font-size: 1.05em;
+  border-bottom: 1px solid var(--xj-border);
+}
+
+.xj-status-table td:first-child {
+  font-weight: 500;
+  color: var(--xj-text-muted);
+  white-space: nowrap;
+  width: 40%;
+}
+
+.xj-status-table td:last-child {
+  color: var(--xj-text);
+}
+
+/* ====== Search Bar ====== */
+.xj-search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.xj-search-bar .xj-input {
+  flex: 1;
+}
+
+/* ====== Categories Table ====== */
+.xj-categories-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.xj-categories-table th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 1em;
+  color: var(--xj-text-muted);
+  border-bottom: 2px solid var(--xj-border);
+}
+
+.xj-categories-table td {
+  padding: 8px 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--xj-border);
+}
+
+.xj-categories-table tr[data-category-id] {
+  transition: background 0.15s;
+}
+
+.xj-categories-table tr[data-category-id]:hover,
+.xj-categories-table tr[data-category-id]:focus-within {
+  background: var(--xj-card-hover);
+}
+
+.xj-categories-table tr[data-item-id] {
+  font-size: 0.95em;
+}
+
+.xj-categories-table tr[data-item-id] > td:first-child {
+  padding-left: 40px;
+}
+
+.xj-categories-table input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: var(--xj-accent);
+}
+
+.xj-expand-btn {
+  background: none;
+  border: none;
+  color: var(--xj-accent);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--xj-radius);
+  min-width: 40px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.xj-expand-btn:hover,
+.xj-expand-btn:focus-visible {
+  background: rgba(0, 164, 220, 0.15);
+}
+
+/* ====== Pagination ====== */
+.xj-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 12px 0;
+  flex-wrap: wrap;
+}
+
+.xj-pagination .xj-page-btn {
+  min-width: 48px;
+  min-height: 48px;
+  padding: 8px 16px;
+  font-size: 1.1em;
+  font-weight: 600;
+  border: 2px solid var(--xj-border);
+  border-radius: var(--xj-radius);
+  background: var(--xj-card-bg);
+  color: var(--xj-text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.xj-pagination .xj-page-btn:hover,
+.xj-pagination .xj-page-btn:focus-visible {
+  border-color: var(--xj-accent);
+  background: var(--xj-card-hover);
+}
+
+.xj-pagination .xj-page-btn.active {
+  background: var(--xj-accent);
+  border-color: var(--xj-accent);
+  color: #fff;
+}
+
+.xj-pagination .xj-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.xj-pagination .xj-page-info {
+  font-size: 1em;
+  color: var(--xj-text-muted);
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+/* ====== Loading Indicator ====== */
+.xj-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--xj-text-muted);
+  font-size: 1.1em;
+}
+
+.xj-loading::after {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+  border: 3px solid var(--xj-border);
+  border-top-color: var(--xj-accent);
+  border-radius: 50%;
+  animation: xj-spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes xj-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ====== Catchup Badge ====== */
+.xj-catchup-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85em;
+  color: var(--xj-accent);
+  white-space: nowrap;
+}
+
+/* ====== TV Overrides Table ====== */
+.xj-overrides-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.xj-overrides-table th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 1em;
+  color: var(--xj-text-muted);
+  border-bottom: 2px solid var(--xj-border);
+}
+
+.xj-overrides-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--xj-border);
+  vertical-align: middle;
+}
+
+.xj-overrides-table .xj-input {
+  padding: 8px 10px;
+  font-size: 0.95em;
+}
+
+.xj-overrides-table img {
+  max-height: 32px;
+  border-radius: 4px;
+}
+
+/* ====== Responsive: TV / Large screens ====== */
+@media (min-width: 960px) {
+  .xj-page {
+    padding: 24px 32px;
+  }
+
+  .xj-btn {
+    min-height: 52px;
+    font-size: 1.05em;
+  }
+
+  .xj-pagination .xj-page-btn {
+    min-width: 56px;
+    min-height: 56px;
+    font-size: 1.2em;
+  }
+}
+
+/* ====== Focus Mode (for D-pad navigation) ====== */
+*:focus-visible {
+  outline: 3px solid var(--xj-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ====== Tabs ====== */
+.xj-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--xj-border);
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.xj-tab {
+  padding: 12px 20px;
+  font-size: 1em;
+  font-weight: 500;
+  color: var(--xj-text-muted);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.xj-tab:hover,
+.xj-tab:focus-visible {
+  color: var(--xj-text);
+  background: var(--xj-card-hover);
+}
+
+.xj-tab.active {
+  color: var(--xj-accent);
+  border-bottom-color: var(--xj-accent);
+}

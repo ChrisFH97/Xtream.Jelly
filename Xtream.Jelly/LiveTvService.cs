@@ -1,0 +1,206 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using MediaBrowser.Controller;
+using MediaBrowser.Controller.Library;
+using MediaBrowser.Controller.LiveTv;
+using MediaBrowser.Model.Dto;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Xtream.Jelly.Client;
+using Xtream.Jelly.Client.Models;
+using Xtream.Jelly.Service;
+
+namespace Xtream.Jelly;
+
+/// <summary>
+/// Class LiveTvService.
+/// </summary>
+public class LiveTvService(IServerApplicationHost appHost, IHttpClientFactory httpClientFactory, ILogger<LiveTvService> logger, IMemoryCache memoryCache, IXtreamClient xtreamClient) : ILiveTvService, ISupportsDirectStreamProvider
+{
+    /// <inheritdoc />
+    public string Name => "Xtream Jelly Live";
+
+    /// <inheritdoc />
+    public string HomePageUrl => string.Empty;
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<ChannelInfo>> GetChannelsAsync(CancellationToken cancellationToken)
+    {
+        Plugin plugin = Plugin.Instance;
+        List<ChannelInfo> items = [];
+        foreach (StreamInfo channel in await plugin.StreamService.GetLiveStreamsWithOverrides(cancellationToken).ConfigureAwait(false))
+        {
+            ParsedName parsed = StreamService.ParseName(channel.Name);
+            items.Add(new ChannelInfo()
+            {
+                Id = StreamService.ToGuid(StreamService.LiveTvPrefix, channel.StreamId, 0, 0).ToString(),
+                Number = channel.Num.ToString(CultureInfo.InvariantCulture),
+                ImageUrl = channel.StreamIcon,
+                Name = parsed.Title,
+                Tags = parsed.Tags,
+            });
+        }
+
+        return items;
+    }
+
+    /// <inheritdoc />
+    public Task CancelTimerAsync(string timerId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Task CreateTimerAsync(TimerInfo info, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Task<IEnumerable<TimerInfo>> GetTimersAsync(CancellationToken cancellationToken)
+    {
+        return Task.FromResult<IEnumerable<TimerInfo>>(new List<TimerInfo>());
+    }
+
+    /// <inheritdoc />
+    public Task<IEnumerable<SeriesTimerInfo>> GetSeriesTimersAsync(CancellationToken cancellationToken)
+    {
+        return Task.FromResult<IEnumerable<SeriesTimerInfo>>(new List<SeriesTimerInfo>());
+    }
+
+    /// <inheritdoc />
+    public Task CreateSeriesTimerAsync(SeriesTimerInfo info, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Task UpdateSeriesTimerAsync(SeriesTimerInfo info, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Task UpdateTimerAsync(TimerInfo updatedTimer, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Task CancelSeriesTimerAsync(string timerId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public async Task<List<MediaSourceInfo>> GetChannelStreamMediaSources(string channelId, CancellationToken cancellationToken)
+    {
+        MediaSourceInfo source = await GetChannelStream(channelId, string.Empty, cancellationToken).ConfigureAwait(false);
+        return [source];
+    }
+
+    /// <inheritdoc />
+    public Task<MediaSourceInfo> GetChannelStream(string channelId, string streamId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Task CloseLiveStream(string id, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Closing livestream {ChannelId}", id);
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task<SeriesTimerInfo> GetNewTimerDefaultsAsync(CancellationToken cancellationToken, ProgramInfo? program = null)
+    {
+        return Task.FromResult(new SeriesTimerInfo
+        {
+            PostPaddingSeconds = 120,
+            PrePaddingSeconds = 120,
+            RecordAnyChannel = false,
+            RecordAnyTime = true,
+            RecordNewOnly = false
+        });
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<ProgramInfo>> GetProgramsAsync(string channelId, DateTime startDateUtc, DateTime endDateUtc, CancellationToken cancellationToken)
+    {
+        Guid guid = Guid.Parse(channelId);
+        StreamService.FromGuid(guid, out int prefix, out int streamId, out int _, out int _);
+        if (prefix != StreamService.LiveTvPrefix)
+        {
+            throw new ArgumentException("Unsupported channel");
+        }
+
+        string key = $"xj-epg-{channelId}";
+        ICollection<ProgramInfo>? items = null;
+        if (memoryCache.TryGetValue(key, out ICollection<ProgramInfo>? o))
+        {
+            items = o;
+        }
+        else
+        {
+            items = new List<ProgramInfo>();
+            Plugin plugin = Plugin.Instance;
+            {
+                EpgListings epgs = await xtreamClient.GetEpgInfoAsync(plugin.Creds, streamId, cancellationToken).ConfigureAwait(false);
+                foreach (EpgInfo epg in epgs.Listings)
+                {
+                    items.Add(new()
+                    {
+                        Id = StreamService.ToGuid(StreamService.EpgPrefix, streamId, epg.Id, 0).ToString(),
+                        ChannelId = channelId,
+                        StartDate = epg.Start,
+                        EndDate = epg.End,
+                        Name = epg.Title,
+                        Overview = epg.Description,
+                    });
+                }
+            }
+
+            memoryCache.Set(key, items, DateTimeOffset.Now.AddMinutes(10));
+        }
+
+        return from epg in items
+               where epg.EndDate >= startDateUtc && epg.StartDate < endDateUtc
+               select epg;
+    }
+
+    /// <inheritdoc />
+    public Task ResetTuner(string id, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public async Task<ILiveStream> GetChannelStreamWithDirectStreamProvider(string channelId, string streamId, List<ILiveStream> currentLiveStreams, CancellationToken cancellationToken)
+    {
+        Guid guid = Guid.Parse(channelId);
+        StreamService.FromGuid(guid, out int prefix, out int channel, out int _, out int _);
+        if (prefix != StreamService.LiveTvPrefix)
+        {
+            throw new ArgumentException("Unsupported channel");
+        }
+
+        Plugin plugin = Plugin.Instance;
+        MediaSourceInfo mediaSourceInfo = plugin.StreamService.GetMediaSourceInfo(StreamType.Live, channel, restream: true);
+        ILiveStream? stream = currentLiveStreams.Find(stream => stream.TunerHostId == Restream.TunerHost && stream.MediaSource.Id == mediaSourceInfo.Id);
+
+        if (stream == null)
+        {
+            stream = new Restream(appHost, httpClientFactory, logger, mediaSourceInfo);
+            await stream.Open(cancellationToken).ConfigureAwait(false);
+        }
+
+        stream.ConsumerCount++;
+        return stream;
+    }
+}

@@ -1,0 +1,31 @@
+<div id="XJLiveOverridesPage" data-role="page" class="page type-interior pluginConfigurationPage withTabs"
+  data-require="emby-input,emby-button" data-controller="__plugin/XJLiveOverrides.js">
+  <div data-role="content">
+    <div class="content-primary xj-page">
+      <form id="XJLiveOverridesForm">
+        <div class="xj-section">
+          <h2 class="xj-section-title">TV Channel Overrides</h2>
+          <p style="color:var(--xj-text-muted);margin-bottom:16px">
+            Override Number, Name, or Logo URL for individual channels.
+            Leave blank to use the provider defaults.
+          </p>
+          <div id="OverridesSearchContainer"></div>
+          <table class="xj-overrides-table">
+            <thead>
+              <tr>
+                <th style="width:100px">Number</th>
+                <th>Name</th>
+                <th>Logo URL</th>
+              </tr>
+            </thead>
+            <tbody id="LiveChannels"></tbody>
+          </table>
+          <div id="OverridesPagination"></div>
+        </div>
+        <div style="margin-top:20px">
+          <button type="submit" class="xj-btn xj-btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
